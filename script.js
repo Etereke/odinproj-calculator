@@ -33,7 +33,6 @@ function handleClick(e) {
 }
 function handleKeyboard(e) {
     const value = e.key;
-    console.log(e);
     if ('0' <= value && value <= '9') {
         handleDigit(value);
     } else if (OPERATORS.includes(value)) {
