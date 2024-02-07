@@ -4,10 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <title>JavaScript Calculator</title>
 </head>
 <body>
-    
+    <div id="calculator">
+        <div class="head-text">
+            <span>JavaScript Calculator</span>
+        </div>
+        <div class="display">0</div>
+        <div class="buttons">
+            <div class="row">
+                <button class="btn btn-digit" id="btn-7" data-value="7">7</button>
+                <button class="btn btn-digit" id="btn-8" data-value="8">8</button>
+                <button class="btn btn-digit" id="btn-9" data-value="9">9</button>
+                <button class="btn btn-operator" id="btn-div" data-value="/">/</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-digit" id="btn-4" data-value="4">4</button>
+                <button class="btn btn-digit" id="btn-5" data-value="5">5</button>
+                <button class="btn btn-digit" id="btn-6" data-value="6">6</button>
+                <button class="btn btn-operator" id="btn-mul" data-value="*">*</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-digit" id="btn-1" data-value="1">1</button>
+                <button class="btn btn-digit" id="btn-2" data-value="2">2</button>
+                <button class="btn btn-digit" id="btn-3" data-value="3">3</button>
+                <button class="btn btn-operator" id="btn-sub" data-value="-">-</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-digit" id="btn-0" data-value="0">0</button>
+                <button class="btn btn-digit" id="btn-dot" data-value=".">.</button>
+                <button class="btn btn-digit" id="btn-back" data-value="back">⌫</button>
+                <button class="btn btn-operator" id="btn-add" data-value="+">+</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-operator btn-long" id="btn-eq" data-value="=">=</button>
+                <button class="btn btn-operator btn-long" id="btn-clear"  data-value="clear">CLEAR</button>
+            </div>
+            
+        </div>
+    </div>
 </body>
 </html>
