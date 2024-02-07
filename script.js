@@ -4,78 +4,57 @@ const display = document.querySelector('.display');
 let firstNum = '';
 let secondNum = '';
 let operator = '';
+// If firstNum is a result of an operation, 
+// backspacing or entering a digit while no 
+// operator is present should reset firstNum to 0
 let isResult = false;
 
 buttons.addEventListener('click', handleClick);
+window.addEventListener('keydown', handleKeyboard);
 populateDisplay();
 
-function add(a, b) {
-    return a + b;
-}
-function subtract(a, b) {
-    return a - b;
-}
-function multiply(a, b) {
-    return a * b;
-}
-function divide(a, b) {
-    return a / b;
-}
-function operate(a, b, op) {
-    let result = 0;
-    switch(op) {
-        case '+':
-            result = add(a, b);
-            break;
-        case '-':
-            result = subtract(a, b);
-            break;
-        case '*':
-            result = multiply(a, b);
-            break;
-        case '/':
-            result = divide(a, b);
-            break;
+
+function handleClick(e) {
+    const value = e.target.dataset.value;
+    if ('0' <= value && value <= '9') {
+        handleDigit(value);
+    } else if (OPERATORS.includes(value)) {
+        handleOperator(value);
+    } else if (value === '.') {
+        handleDecimal();
+    } else if (value === '=') {
+        handleEvaluate();
+    } else if (value === 'clear') {
+        clearDisplay();
+    } else if (value === 'back') {
+        handleBackspace();
     }
-    return parseFloat(result.toFixed(8)).toString();
+    populateDisplay();
 }
-function clearDisplay() {
-    firstNum = '0';
-    secondNum = '';
-    operator = '';
-    isResult = false;
+function handleKeyboard(e) {
+    const value = e.key;
+    console.log(e);
+    if ('0' <= value && value <= '9') {
+        handleDigit(value);
+    } else if (OPERATORS.includes(value)) {
+        handleOperator(value);
+    } else if (value === '.') {
+        handleDecimal();
+    } else if (value === '=' || value === 'Enter') {
+        handleEvaluate();
+    } else if (value === 'Delete') {
+        clearDisplay();
+    } else if (value === 'Backspace') {
+        handleBackspace();
+    }
+    populateDisplay();
 }
-function isNumeric(str) {
-    if (typeof str != "string") return false;
-    return !isNaN(str) && 
-           !isNaN(parseFloat(str));
-  }
-function populateDisplay() {
-    display.classList.remove('display-overflow', 'display-overflow-extra', 'display-overflow-max');
-    if (+firstNum === Infinity || +firstNum === -Infinity) {
-        firstNum = 'You tried to divide by 0';
-        secondNum = '';
-        operator = '';
-        isResult = true;
-    }
-    display.textContent = `${firstNum || '0'} ${operator} ${secondNum}`;
-    if (display.textContent.length > 17) {
-        display.classList.add('display-overflow');
-    }
-    if (display.textContent.length > 24) {
-        display.classList.add('display-overflow-extra');
-    }
-    if (display.textContent.length > 31) {
-        display.classList.add('display-overflow-max');
-    }
-}
+
 function handleDigit(value) {
     if (operator === '') {
-        if (isResult) {
+        if (isResult || firstNum === '0') {
             firstNum = value;
             isResult = false;
-        } else if (firstNum === '0') {
-            firstNum = value;
         } else if (firstNum.length < 10) {
             firstNum += value;
         }
@@ -135,20 +114,61 @@ function handleBackspace() {
     }
 }
 
-function handleClick(e) {
-    const value = e.target.dataset.value;
-    if ('0' <= value && value <= '9') {
-        handleDigit(value);
-    } else if (OPERATORS.includes(value)) {
-        handleOperator(value);
-    } else if (value === '.') {
-        handleDecimal();
-    } else if (value === '=') {
-        handleEvaluate();
-    } else if (value === 'clear') {
-        clearDisplay();
-    } else if (value === 'back') {
-        handleBackspace();
+
+function add(a, b) {
+    return a + b;
+}
+function subtract(a, b) {
+    return a - b;
+}
+function multiply(a, b) {
+    return a * b;
+}
+function divide(a, b) {
+    return a / b;
+}
+function operate(a, b, op) {
+    let result = 0;
+    switch(op) {
+        case '+':
+            result = add(a, b);
+            break;
+        case '-':
+            result = subtract(a, b);
+            break;
+        case '*':
+            result = multiply(a, b);
+            break;
+        case '/':
+            result = divide(a, b);
+            break;
     }
-    populateDisplay();
+    return parseFloat(result.toFixed(8)).toString();
+}
+
+
+function clearDisplay() {
+    firstNum = '0';
+    secondNum = '';
+    operator = '';
+    isResult = false;
+}
+function populateDisplay() {
+    display.classList.remove('display-overflow', 'display-overflow-extra', 'display-overflow-max');
+    if (+firstNum === Infinity || +firstNum === -Infinity) {
+        firstNum = 'You tried to divide by 0... shame on you!';
+        secondNum = '';
+        operator = '';
+        isResult = true;
+    }
+    display.textContent = `${firstNum || '0'} ${operator} ${secondNum}`;
+    if (display.textContent.length > 17) {
+        display.classList.add('display-overflow');
+    }
+    if (display.textContent.length > 24) {
+        display.classList.add('display-overflow-extra');
+    }
+    if (display.textContent.length > 31) {
+        display.classList.add('display-overflow-max');
+    }
 }
