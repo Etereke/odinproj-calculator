@@ -1,4 +1,14 @@
 const OPERATORS = ['+', '-', '*', '/'];
+const buttons = document.querySelector('.buttons');
+const display = document.querySelector('.display');
+let firstNum = '';
+let secondNum = '';
+let operator = '';
+let isResult = false;
+
+buttons.addEventListener('click', handleClick);
+populateDisplay();
+
 function add(a, b) {
     return a + b;
 }
@@ -33,7 +43,7 @@ function clearDisplay() {
     firstNum = '0';
     secondNum = '';
     operator = '';
-    rewriteFirstnum = true;
+    isResult = false;
 }
 function isNumeric(str) {
     if (typeof str != "string") return false;
@@ -41,19 +51,29 @@ function isNumeric(str) {
            !isNaN(parseFloat(str));
   }
 function populateDisplay() {
+    display.classList.remove('display-overflow', 'display-overflow-extra', 'display-overflow-max');
     if (+firstNum === Infinity || +firstNum === -Infinity) {
         firstNum = 'You tried to divide by 0';
         secondNum = '';
         operator = '';
-        rewriteFirstnum = true;
+        isResult = true;
     }
     display.textContent = `${firstNum || '0'} ${operator} ${secondNum}`;
+    if (display.textContent.length > 17) {
+        display.classList.add('display-overflow');
+    }
+    if (display.textContent.length > 24) {
+        display.classList.add('display-overflow-extra');
+    }
+    if (display.textContent.length > 31) {
+        display.classList.add('display-overflow-max');
+    }
 }
 function handleDigit(value) {
     if (operator === '') {
-        if (rewriteFirstnum) {
+        if (isResult) {
             firstNum = value;
-            rewriteFirstnum = false;
+            isResult = false;
         } else if (firstNum === '0') {
             firstNum = value;
         } else if (firstNum.length < 10) {
@@ -67,7 +87,7 @@ function handleDigit(value) {
 function handleOperator(value) {
     if (isNaN(+firstNum)) {
         firstNum = '0';
-        rewriteFirstnum = false;
+        isResult = false;
     }
     if (secondNum === '') {
         operator = value;
@@ -75,6 +95,7 @@ function handleOperator(value) {
         firstNum = operate(+firstNum, +secondNum, operator);
         operator = value;
         secondNum = '';
+        isResult = true;
     }
 }
 function handleEvaluate() {
@@ -82,14 +103,14 @@ function handleEvaluate() {
         firstNum = operate(+firstNum, +secondNum, operator);
         operator = '';
         secondNum = '';
-        rewriteFirstnum = true;
+        isResult = true;
     }
 }
 function handleDecimal() {
     if (operator === '') {
-        if (isNaN(+firstNum) || +firstNum === 0 || rewriteFirstnum || firstNum === '') {
+        if (isNaN(+firstNum) || +firstNum === 0 || isResult || firstNum === '') {
             firstNum = '0.';
-            rewriteFirstnum = false;
+            isResult = false;
         } else if (!firstNum.includes('.')) {
             firstNum += '.';
         }
@@ -102,11 +123,11 @@ function handleDecimal() {
     }
 }
 function handleBackspace() {
-    if (operator === '' || rewriteFirstnum) {
-        firstNum = firstNum.length > 1 && !rewriteFirstnum
+    if (operator === '') {
+        firstNum = firstNum.length > 1 && !isResult
             ? firstNum.slice(0, firstNum.length - 1)
             : '0';
-        rewriteFirstnum = false;
+            isResult = false;
     } else if (secondNum === '') {
         operator = '';
     } else {
@@ -131,12 +152,3 @@ function handleClick(e) {
     }
     populateDisplay();
 }
-
-const buttons = document.querySelector('.buttons');
-const display = document.querySelector('.display');
-buttons.addEventListener('click', handleClick);
-let firstNum = '';
-let secondNum = '';
-let operator = '';
-let rewriteFirstnum = true;
-populateDisplay();
